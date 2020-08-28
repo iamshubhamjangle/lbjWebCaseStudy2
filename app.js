@@ -6,7 +6,7 @@ const fs = require('fs');
 var csvWriter = require('csv-write-stream')
 var writer = csvWriter()
 
-const path = "D:/Documents/Study material/LTI/lbj_webStudy2/public/students.csv";
+const path = "students.csv";
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs"); //help to avoid .ejs HTML page
@@ -26,17 +26,16 @@ app.get("/searchStudent", function(req, res){
 });
 
 app.get("/viewStudent", function(req, res){
-	res.render("viewStudent");
-
 	console.log('Reading CSV file');
 	fs.createReadStream(path)
   	.pipe(csv())
   	.on('data', (row) => { 
-  		console.log(row);})
+  		console.log(row);
+  	})
   	.on('end', () => {
     	//console.log('CSV file successfully processed');
   	});
-
+  	res.render("viewStudent");
 });
 
 app.post("/addNewStudent", function(req, res){
