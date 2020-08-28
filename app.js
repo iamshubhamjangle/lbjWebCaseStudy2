@@ -3,21 +3,14 @@ var app = express();
 var bodyParser = require("body-parser");
 const csv = require('csv-parser');
 const fs = require('fs');
-const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+var csvWriter = require('csv-write-stream')
+var writer = csvWriter()
+
 const path = "D:/Documents/Study material/LTI/lbj_webStudy2/public/students.csv";
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs"); //help to avoid .ejs HTML page
 app.use(express.static("public"));
-
-const csvWriter = createCsvWriter({
-  path: 'D:/Documents/Study material/LTI/lbj_webStudy2/public/students.csv',
-  header: [
-    {id: 'sid', title: 'Student Id'},
-    {id: 'sname', title: 'Name'},
-  ]
-});
-
 
 
 app.get("/", function(req, res){
@@ -51,10 +44,13 @@ app.post("/addNewStudent", function(req, res){
 	var sname = req.body.sname;
 	console.log("\nData received from input: " + req.body.sid + " " + req.body.sname);
 
- 	const data = [{sid: sid, sname: sname}]; //can add multiple values with help of object
- 	csvWriter
-  	.writeRecords(data)
-  	.then(()=> console.log('\nThe CSV file was written successfully\n'));
+	var writer = csvWriter({sendHeaders: false})
+	writer.pipe(fs.createWriteStream(path, {flags: 'a'}))
+	writer.write({
+		Student_Id: sid, 
+		name: sname
+	})
+	writer.end()
 
 	res.redirect("/");
 });
