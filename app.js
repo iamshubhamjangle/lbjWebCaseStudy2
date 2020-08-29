@@ -6,7 +6,7 @@ const fs = require('fs');
 var csvWriter = require('csv-write-stream')
 var writer = csvWriter()
 
-const path = "students.csv";
+const path = "D:/Documents/Study material/LTI/lbj_webStudy2/public/students.csv";
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs"); //help to avoid .ejs HTML page
